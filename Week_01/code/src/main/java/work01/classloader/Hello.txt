@@ -1,0 +1,131 @@
+Classfile /Users/penghuiliu/geek_learn/JAVA-000/Week_01/code/src/main/java/work01/classloader/Hello.class
+  Last modified 2020-10-20; size 601 bytes
+  MD5 checksum 79524bbeb225bd416a8775c8a5a6f20d
+  Compiled from "Hello.java"
+public class work01.classloader.Hello
+  minor version: 0
+  major version: 52
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #5.#16         // java/lang/Object."<init>":()V
+   #2 = Fieldref           #17.#18        // java/lang/System.out:Ljava/io/PrintStream;
+   #3 = Methodref          #19.#20        // java/io/PrintStream.println:(I)V
+   #4 = Class              #21            // work01/classloader/Hello
+   #5 = Class              #22            // java/lang/Object
+   #6 = Utf8               <init>
+   #7 = Utf8               ()V
+   #8 = Utf8               Code
+   #9 = Utf8               LineNumberTable
+  #10 = Utf8               main
+  #11 = Utf8               ([Ljava/lang/String;)V
+  #12 = Utf8               StackMapTable
+  #13 = Class              #23            // "[Ljava/lang/String;"
+  #14 = Utf8               SourceFile
+  #15 = Utf8               Hello.java
+  #16 = NameAndType        #6:#7          // "<init>":()V
+  #17 = Class              #24            // java/lang/System
+  #18 = NameAndType        #25:#26        // out:Ljava/io/PrintStream;
+  #19 = Class              #27            // java/io/PrintStream
+  #20 = NameAndType        #28:#29        // println:(I)V
+  #21 = Utf8               work01/classloader/Hello
+  #22 = Utf8               java/lang/Object
+  #23 = Utf8               [Ljava/lang/String;
+  #24 = Utf8               java/lang/System
+  #25 = Utf8               out
+  #26 = Utf8               Ljava/io/PrintStream;
+  #27 = Utf8               java/io/PrintStream
+  #28 = Utf8               println
+  #29 = Utf8               (I)V
+{
+  public work01.classloader.Hello();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 3: 0
+
+  public static void main(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)V
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=3, locals=10, args_size=1
+         0: bipush        10
+         2: istore_1
+         3: iconst_2
+         4: istore_2
+         5: iload_1
+         6: iload_2
+         7: iadd
+         8: istore_3
+         9: iload_1
+        10: iload_2
+        11: isub
+        12: istore        4
+        14: iload_1
+        15: iload_2
+        16: imul
+        17: istore        5
+        19: iload_1
+        20: iload_2
+        21: idiv
+        22: istore        6
+        24: iconst_0
+        25: istore        7
+        27: iconst_0
+        28: istore        8
+        30: iconst_0
+        31: istore        9
+        33: iload         9
+        35: bipush        10
+        37: if_icmpge     62
+        40: iload_2
+        41: iload         9
+        43: iadd
+        44: istore        7
+        46: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        49: iload_1
+        50: iload         9
+        52: iadd
+        53: invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
+        56: iinc          9, 1
+        59: goto          33
+        62: iload         7
+        64: bipush        10
+        66: if_icmple     81
+        69: iload         7
+        71: istore        8
+        73: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        76: iload         8
+        78: invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
+        81: return
+      LineNumberTable:
+        line 6: 0
+        line 7: 3
+        line 8: 5
+        line 9: 9
+        line 10: 14
+        line 11: 19
+        line 12: 24
+        line 13: 27
+        line 14: 30
+        line 15: 40
+        line 16: 46
+        line 14: 56
+        line 18: 62
+        line 19: 69
+        line 20: 73
+        line 22: 81
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 33
+          locals = [ class "[Ljava/lang/String;", int, int, int, int, int, int, int, int, int ]
+          stack = []
+        frame_type = 250 /* chop */
+          offset_delta = 28
+        frame_type = 18 /* same */
+}
+SourceFile: "Hello.java"

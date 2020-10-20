@@ -1,0 +1,12 @@
+target/
+logs/
+log/
+.idea/
+*.iml
+.DS_Store
+*/code/target
+*/code/.idea/
+*/code/*.iml
+*/code/.DS_Store
+*/code/logs/
+*/code/log/
