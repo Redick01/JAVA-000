@@ -1,8 +1,8 @@
-###作业
+##作业
 
-#####一.GCLogAnalysis.java演示串行/并行/CMS/G1案例，本案例对内存均配置成-Xms256m -Xmx512m
+###一.GCLogAnalysis.java演示串行/并行/CMS/G1案例，本案例对内存均配置成-Xms256m -Xmx512m
 
-######1.串行GC
+####1.串行GC
 串行GC日志
 ````
 Java HotSpot(TM) 64-Bit Server VM (25.151-b12) for bsd-amd64 JRE (1.8.0_151-b12), built on Sep  5 2017 19:37:08 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
@@ -74,7 +74,7 @@ Heap
 9、程序执行完成后：年轻代总共157248K, 已经使用了5650K，eden区已经使用了4%，from to区空的；老年代总共349568K, 已经使用300168K，使用率达到了85%；metaspace容量4486K已经使用2697K
 ```
 
-######2.并行GC
+####2.并行GC
 并行GC日志
 ````
 Java HotSpot(TM) 64-Bit Server VM (25.151-b12) for bsd-amd64 JRE (1.8.0_151-b12), built on Sep  5 2017 19:37:08 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
@@ -157,7 +157,7 @@ Heap
    使用率逐渐增加。
 ```
 
-######3.CMS GC
+####3.CMS GC
 
 CMS GC日志1
 
@@ -340,13 +340,224 @@ Heap
               2020-10-28T00:07:42.348-0800: 1.030: [CMS-concurrent-reset: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
 ```
 
-######4.G1 GC
+####4.G1 GC
+#####G1 GC日志：G1 GC的GC过程有两种模式Young GC和Mixed GC，接下来根据日志分析两种模式，由于日志量过大这里只分别粘出Young GC和Mixed GC的一段日志进行分析
+
+命令行参数
+````
+-XX:InitialHeapSize=1073741824 -XX:MaxHeapSize=1073741824 -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC
+````
+
+堆信息日志分析
+
+````
+Heap
+ garbage-first heap   total 1048576K, used 668067K [0x0000000780000000, 0x0000000780102000, 0x00000007c0000000)
+  region size 1024K, 128 young (131072K), 7 survivors (7168K)
+ Metaspace       used 2696K, capacity 4486K, committed 4864K, reserved 1056768K
+  class space    used 295K, capacity 386K, committed 512K, reserved 1048576K
+````
+```
+    从堆信息日志中可以看出，使用的是G1（garbage-first），堆的总容量是1048576K，已经使用了668067K；每个region大小是1024K（1M），128个region是young区（131072K），7个region是survivors（7168K）；
+    Metaspace 已经使用了2696K，容量是4486K，当前可使用大小4864K，元数据保留空间1056768K
+    类似于Metaspace，class space与之相似。
+```
+
+######Young GC：该种模式GC选定所有年轻代Region，通过控制年轻代Region的个数（或者说大小）来控制Young GC时间开销
+
+Young GC日志分析
+
+````
+0.129: [GC pause (G1 Evacuation Pause) (young), 0.0088526 secs]
+   [Parallel Time: 8.2 ms, GC Workers: 8]
+      [GC Worker Start (ms): Min: 128.8, Avg: 128.9, Max: 128.9, Diff: 0.1]
+      [Ext Root Scanning (ms): Min: 0.1, Avg: 0.2, Max: 0.3, Diff: 0.2, Sum: 1.4]
+      [Update RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+         [Processed Buffers: Min: 0, Avg: 0.0, Max: 0, Diff: 0, Sum: 0]
+      [Scan RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [Code Root Scanning (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [Object Copy (ms): Min: 7.3, Avg: 7.6, Max: 7.9, Diff: 0.6, Sum: 60.9]
+      [Termination (ms): Min: 0.0, Avg: 0.3, Max: 0.6, Diff: 0.6, Sum: 2.3]
+         [Termination Attempts: Min: 1, Avg: 1.0, Max: 1, Diff: 0, Sum: 8]
+      [GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.1]
+      [GC Worker Total (ms): Min: 8.1, Avg: 8.1, Max: 8.1, Diff: 0.1, Sum: 64.8]
+      [GC Worker End (ms): Min: 137.0, Avg: 137.0, Max: 137.0, Diff: 0.0]
+   [Code Root Fixup: 0.0 ms]
+   [Code Root Purge: 0.0 ms]
+   [Clear CT: 0.1 ms]
+   [Other: 0.5 ms]
+      [Choose CSet: 0.0 ms]
+      [Ref Proc: 0.2 ms]
+      [Ref Enq: 0.0 ms]
+      [Redirty Cards: 0.1 ms]
+      [Humongous Register: 0.1 ms]
+      [Humongous Reclaim: 0.0 ms]
+      [Free CSet: 0.0 ms]
+   [Eden: 51.0M(51.0M)->0.0B(44.0M) Survivors: 0.0B->7168.0K Heap: 63.7M(1024.0M)->24.9M(1024.0M)]
+ [Times: user=0.02 sys=0.04, real=0.01 secs] 
+````
+```
+1、程序在启动的第128毫秒发生了第一次GC；
+2、[GC pause (G1 Evacuation Pause) (young), 0.0088526 secs]：这是个新生代的Minor GC，该段表示将活着的对象从一个区域拷贝到另一个区域；
+3、GC Workers: 8：GC的工作线程有8个；
+4、[Ext Root Scanning (ms): Min: 0.1, Avg: 0.2, Max: 0.3, Diff: 0.2, Sum: 1.4] 表示扫描Roots花费的时间；
+5、[Update RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0] [Processed Buffers: Min: 0, Avg: 0.0, Max: 0, Diff: 0, Sum: 0] 表示每个线程更新remember set花费的时间；
+6、[Scan RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0] 扫描CSet中region对应的remeber set的时间；
+7、[Code Root Scanning (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0] 扫描code roots耗时，code roots是JIT编译后的代码里引用了堆中的对象。引用关系保存在remember set中；
+8、[Object Copy (ms): Min: 7.3, Avg: 7.6, Max: 7.9, Diff: 0.6, Sum: 60.9] 拷贝活的对象到别的region耗时；
+9、[Termination (ms): Min: 0.0, Avg: 0.3, Max: 0.6, Diff: 0.6, Sum: 2.3] 线程结束
+10、[GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.1] 花费在其他工作上时间
+11、[GC Worker Total (ms): Min: 8.1, Avg: 8.1, Max: 8.1, Diff: 0.1, Sum: 64.8] 每个线程耗时的和
+12、[GC Worker End (ms): Min: 137.0, Avg: 137.0, Max: 137.0, Diff: 0.0] 每个线程的结束时间
+13、[Code Root Fixup: 0.0 ms]
+      [Code Root Purge: 0.0 ms]
+      [Clear CT: 0.1 ms]
+      分别是修正Code Root耗时；清理Code Root引用耗时；清理Card Table耗时
+14、[Other: 0.5 ms]
+            [Choose CSet: 0.0 ms]
+            [Ref Proc: 0.2 ms]
+            [Ref Enq: 0.0 ms]
+            [Redirty Cards: 0.1 ms]
+            [Humongous Register: 0.1 ms]
+            [Humongous Reclaim: 0.0 ms]
+            [Free CSet: 0.0 ms]
+      其他耗时：选择CSet，处理已用对象，引用入ReferenceQueues，释放CSet中的region到free list。
+15、[Eden: 51.0M(51.0M)->0.0B(44.0M) Survivors: 0.0B->7168.0K Heap: 63.7M(1024.0M)->24.9M(1024.0M)] 新生代被清空了，下次大小为44.0M，幸存者区增加到7168.0K，整个堆由63.7M降低到24.9M。
+```
+
+######Mixed GC：顾名思义，混合型GC，该种模式选定所有年轻代Region，外加根据global concurrent marking统计得出的收益较高的若干老年代Region，在用户指定的开销目标范围内尽可能选择收益高的老年代Region。
+
+Mixed GC日志分析
+````
+0.654: [GC pause (G1 Humongous Allocation) (young) (initial-mark), 0.0088469 secs]
+   [Parallel Time: 8.2 ms, GC Workers: 8]
+      [GC Worker Start (ms): Min: 653.9, Avg: 654.0, Max: 654.0, Diff: 0.1]
+      [Ext Root Scanning (ms): Min: 0.1, Avg: 0.1, Max: 0.2, Diff: 0.1, Sum: 0.9]
+      [Update RS (ms): Min: 0.2, Avg: 0.2, Max: 0.4, Diff: 0.3, Sum: 1.8]
+         [Processed Buffers: Min: 0, Avg: 2.4, Max: 3, Diff: 3, Sum: 19]
+      [Scan RS (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.1]
+      [Code Root Scanning (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.0]
+      [Object Copy (ms): Min: 7.3, Avg: 7.6, Max: 7.8, Diff: 0.6, Sum: 60.6]
+      [Termination (ms): Min: 0.0, Avg: 0.2, Max: 0.5, Diff: 0.5, Sum: 1.6]
+         [Termination Attempts: Min: 1, Avg: 1.8, Max: 3, Diff: 2, Sum: 14]
+      [GC Worker Other (ms): Min: 0.0, Avg: 0.0, Max: 0.0, Diff: 0.0, Sum: 0.2]
+      [GC Worker Total (ms): Min: 8.1, Avg: 8.2, Max: 8.2, Diff: 0.1, Sum: 65.2]
+      [GC Worker End (ms): Min: 662.1, Avg: 662.1, Max: 662.1, Diff: 0.0]
+   [Code Root Fixup: 0.0 ms]
+   [Code Root Purge: 0.0 ms]
+   [Clear CT: 0.1 ms]
+   [Other: 0.5 ms]
+      [Choose CSet: 0.0 ms]
+      [Ref Proc: 0.1 ms]
+      [Ref Enq: 0.0 ms]
+      [Redirty Cards: 0.1 ms]
+      [Humongous Register: 0.1 ms]
+      [Humongous Reclaim: 0.1 ms]
+      [Free CSet: 0.1 ms]
+   [Eden: 80.0M(281.0M)->0.0B(332.0M) Survivors: 33.0M->24.0M Heap: 510.1M(1024.0M)->431.6M(1024.0M)]
+ [Times: user=0.02 sys=0.03, real=0.01 secs] 
+0.663: [GC concurrent-root-region-scan-start]
+0.663: [GC concurrent-root-region-scan-end, 0.0001375 secs]
+0.663: [GC concurrent-mark-start]
+0.666: [GC concurrent-mark-end, 0.0026340 secs]
+0.666: [GC remark 0.666: [Finalize Marking, 0.0002389 secs] 0.666: [GC ref-proc, 0.0000388 secs] 0.666: [Unloading, 0.0004490 secs], 0.0015490 secs]
+ [Times: user=0.01 sys=0.00, real=0.00 secs] 
+0.668: [GC cleanup 449M->430M(1024M), 0.0007843 secs]
+ [Times: user=0.00 sys=0.00, real=0.00 secs] 
+0.668: [GC concurrent-cleanup-start]
+0.668: [GC concurrent-cleanup-end, 0.0000144 secs] 
+````
+```
+1、程序在执行的第654毫秒发生了一次Mixed GC；
+2、发生的原因是：Humongous Allocation，巨大对象分配之前，会检测到old generation 使用占比是否超过了 initiating heap occupancy percent（45%），因所以触发了本次global concurrent marking；
+3、可以看到Mixed GC前半部分几乎和Young GC一摸一样；
+4、但是后半部分就很不一样了，可以看到后续的操作大部分都是并发操作，包括：并发的扫描roots region；并发的标记；最终标记（STW）；并发清理。
+```
+
+###二.使用wrk压测演练gateway-server-0.0.1-SNAPSHOT.jar
+
+#####使用wrk进行压测，统一使用40连接数 40线程 压30秒；程序启动内存统一使用512m
+
+####使用串行GC，压测数据
+
+```
+Running 30s test @ http://localhost:8088/api/hello
+  40 threads and 40 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.67ms   22.41ms 395.23ms   91.25%
+    Req/Sec   615.32    298.25     4.87k    67.10%
+  726060 requests in 30.08s, 86.68MB read
+Requests/sec:  24133.88
+Transfer/sec:      2.88MB
+
+描述：
+40线程，40连接数
+ 平均吞吐量 615.32 
+Latency：平均响应时间 8.67ms 标准差 22.41ms  最大时间响应时间395.23ms 正负一个标准差占比  91.25%
+Req/Sec（吞吐量）：平均 615.32 标准差 298.25 最高吞吐量 4.87k 正负一个标准差占比 67.10%
+
+（QPS）Requests/sec:  24133.88
+（每秒钟读取数据量）Transfer/sec: 2.88MB     
+```
+
+####使用并行GC，压测数据
+
+```
+Running 30s test @ http://localhost:8088/api/hello
+  40 threads and 40 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.72ms   22.00ms 283.16ms   90.92%
+    Req/Sec   636.82    309.89     2.63k    67.74%
+  749283 requests in 30.10s, 89.46MB read
+Requests/sec:  24893.74
+Transfer/sec:      2.97MB
+
+描述：
+40线程，40连接数
+ 平均吞吐量 636.82 
+Latency：平均响应时间 8.72ms 标准差 22.00ms  最大时间响应时间283.16ms 正负一个标准差占比  90.92%
+Req/Sec（吞吐量）：平均 636.82 标准差 309.89  最高吞吐量 2.63k 正负一个标准差占比 67.74%
+
+（QPS）Requests/sec:  24893.74
+（每秒钟读取数据量）Transfer/sec: 2.97MB
+```
+
+####使用CMS GC，压测数据
+
+```
+Running 30s test @ http://localhost:8088/api/hello
+  40 threads and 40 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.17ms   19.22ms 321.25ms   92.70%
+    Req/Sec   602.08    285.13     3.31k    69.11%
+  711670 requests in 30.10s, 84.97MB read
+Requests/sec:  23643.55
+Transfer/sec:      2.82MB
 
 
-#####二.使用wrk压测演练gateway-server-0.0.1-SNAPSHOT.jar
+描述：可以看到性能没有并行GC好，甚至没有串行GC好
+```
+
+####使用G1 GC，压测数据
+
+```
+Running 30s test @ http://localhost:8088/api/hello
+  40 threads and 40 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.44ms   21.70ms 273.60ms   90.42%
+    Req/Sec   556.68    332.23     1.97k    65.59%
+  656124 requests in 30.09s, 78.33MB read
+Requests/sec:  21806.75
+Transfer/sec:      2.60MB
 
 
-#####三.使用HttpClient或OkHttp访问http://localhost:8801
+描述：可以看到性能没有并行GC好，甚至没有串行GC好
+```
+####wrk压测总结
+
+在CMS GC中，我调整了堆大小参数，将其提高到了1g，压测结果还是并行GC的吞吐量更高，所以在目前jdk8版本，并行GC在某些场景表现更好，结合作业1，感觉在堆内存较大的时候G1表现的更好
+
+###三.使用HttpClient或OkHttp访问http://localhost:8801
 ```
 1、本作业选用的是HttpClient，因为使用了HttpClient，需要引入以下依赖
         <dependency>
@@ -361,7 +572,7 @@ Heap
         </dependency>
 
 2、使用HttpClient访问http://localhost:8801代码如下：
-
+代码文件也可以在：Week_02文件夹下找到
 
 public class HttpClient {
 
