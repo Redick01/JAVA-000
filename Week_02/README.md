@@ -1,8 +1,8 @@
-##作业
+## 作业
 
-###一.GCLogAnalysis.java演示串行/并行/CMS/G1案例，本案例对内存均配置成-Xms256m -Xmx512m
+### 一.GCLogAnalysis.java演示串行/并行/CMS/G1案例，本案例对内存均配置成-Xms256m -Xmx512m
 
-####1.串行GC
+#### 1.串行GC
 串行GC日志
 ````
 Java HotSpot(TM) 64-Bit Server VM (25.151-b12) for bsd-amd64 JRE (1.8.0_151-b12), built on Sep  5 2017 19:37:08 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
@@ -74,7 +74,7 @@ Heap
 9、程序执行完成后：年轻代总共157248K, 已经使用了5650K，eden区已经使用了4%，from to区空的；老年代总共349568K, 已经使用300168K，使用率达到了85%；metaspace容量4486K已经使用2697K
 ```
 
-####2.并行GC
+#### 2.并行GC
 并行GC日志
 ````
 Java HotSpot(TM) 64-Bit Server VM (25.151-b12) for bsd-amd64 JRE (1.8.0_151-b12), built on Sep  5 2017 19:37:08 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
@@ -157,7 +157,7 @@ Heap
    使用率逐渐增加。
 ```
 
-####3.CMS GC
+#### 3.CMS GC
 
 CMS GC日志1
 
@@ -340,8 +340,8 @@ Heap
               2020-10-28T00:07:42.348-0800: 1.030: [CMS-concurrent-reset: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
 ```
 
-####4.G1 GC
-#####G1 GC日志：G1 GC的GC过程有两种模式Young GC和Mixed GC，接下来根据日志分析两种模式，由于日志量过大这里只分别粘出Young GC和Mixed GC的一段日志进行分析
+#### 4.G1 GC
+##### G1 GC日志：G1 GC的GC过程有两种模式Young GC和Mixed GC，接下来根据日志分析两种模式，由于日志量过大这里只分别粘出Young GC和Mixed GC的一段日志进行分析
 
 命令行参数
 ````
@@ -363,7 +363,7 @@ Heap
     类似于Metaspace，class space与之相似。
 ```
 
-######Young GC：该种模式GC选定所有年轻代Region，通过控制年轻代Region的个数（或者说大小）来控制Young GC时间开销
+###### Young GC：该种模式GC选定所有年轻代Region，通过控制年轻代Region的个数（或者说大小）来控制Young GC时间开销
 
 Young GC日志分析
 
@@ -425,7 +425,7 @@ Young GC日志分析
 15、[Eden: 51.0M(51.0M)->0.0B(44.0M) Survivors: 0.0B->7168.0K Heap: 63.7M(1024.0M)->24.9M(1024.0M)] 新生代被清空了，下次大小为44.0M，幸存者区增加到7168.0K，整个堆由63.7M降低到24.9M。
 ```
 
-######Mixed GC：顾名思义，混合型GC，该种模式选定所有年轻代Region，外加根据global concurrent marking统计得出的收益较高的若干老年代Region，在用户指定的开销目标范围内尽可能选择收益高的老年代Region。
+###### Mixed GC：顾名思义，混合型GC，该种模式选定所有年轻代Region，外加根据global concurrent marking统计得出的收益较高的若干老年代Region，在用户指定的开销目标范围内尽可能选择收益高的老年代Region。
 
 Mixed GC日志分析
 ````
@@ -474,11 +474,11 @@ Mixed GC日志分析
 4、但是后半部分就很不一样了，可以看到后续的操作大部分都是并发操作，包括：并发的扫描roots region；并发的标记；最终标记（STW）；并发清理。
 ```
 
-###二.使用wrk压测演练gateway-server-0.0.1-SNAPSHOT.jar
+### 二.使用wrk压测演练gateway-server-0.0.1-SNAPSHOT.jar
 
-#####使用wrk进行压测，统一使用40连接数 40线程 压30秒；程序启动内存统一使用512m
+##### 使用wrk进行压测，统一使用40连接数 40线程 压30秒；程序启动内存统一使用512m
 
-####使用串行GC，压测数据
+#### 使用串行GC，压测数据
 
 ```
 Running 30s test @ http://localhost:8088/api/hello
@@ -500,7 +500,7 @@ Req/Sec（吞吐量）：平均 615.32 标准差 298.25 最高吞吐量 4.87k �
 （每秒钟读取数据量）Transfer/sec: 2.88MB     
 ```
 
-####使用并行GC，压测数据
+#### 使用并行GC，压测数据
 
 ```
 Running 30s test @ http://localhost:8088/api/hello
@@ -522,7 +522,7 @@ Req/Sec（吞吐量）：平均 636.82 标准差 309.89  最高吞吐量 2.63k �
 （每秒钟读取数据量）Transfer/sec: 2.97MB
 ```
 
-####使用CMS GC，压测数据
+#### 使用CMS GC，压测数据
 
 ```
 Running 30s test @ http://localhost:8088/api/hello
@@ -538,7 +538,7 @@ Transfer/sec:      2.82MB
 描述：可以看到性能没有并行GC好，甚至没有串行GC好
 ```
 
-####使用G1 GC，压测数据
+#### 使用G1 GC，压测数据
 
 ```
 Running 30s test @ http://localhost:8088/api/hello
@@ -553,11 +553,11 @@ Transfer/sec:      2.60MB
 
 描述：可以看到性能没有并行GC好，甚至没有串行GC好
 ```
-####wrk压测总结
+#### wrk压测总结
 
 在CMS GC中，我调整了堆大小参数，将其提高到了1g，压测结果还是并行GC的吞吐量更高，所以在目前jdk8版本，并行GC在某些场景表现更好，结合作业1，感觉在堆内存较大的时候G1表现的更好
 
-###三.使用HttpClient或OkHttp访问http://localhost:8801
+### 三.使用HttpClient或OkHttp访问http://localhost:8801
 ```
 1、本作业选用的是HttpClient，因为使用了HttpClient，需要引入以下依赖
         <dependency>
@@ -611,15 +611,15 @@ public class HttpClient {
 
 
 
-###学习笔记
+### 学习笔记
 
-######解决死锁
+###### 解决死锁
     1、检测到死锁
     2、两个方法解决：给锁住的资源加超时时间；将其中一个线程kill掉
     
-######分配速率到底影响什么
+###### 分配速率到底影响什么
     影响Eden区
-######增加Eden
+###### 增加Eden
     蓄水池效应；Young GC次数减少对吞吐量有一定提升
     
     
