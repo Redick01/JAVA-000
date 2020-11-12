@@ -2,6 +2,7 @@ package work01.classloader;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liu_penghui
@@ -10,10 +11,23 @@ import java.lang.reflect.Method;
 public class MyClassLoader extends ClassLoader {
 
     public static void main(String[] args) throws Exception {
-        Class<?> aClass = new MyClassLoader().findClass("Hello");
+        MyClassLoader myClassLoader = new MyClassLoader();
+        Class<?> aClass = myClassLoader.findClass("Hello");
         Object obj = aClass.newInstance();
-        Method method = aClass.getMethod("hello");
-        method.invoke(obj);
+        Method method = aClass.getMethod("hello", null);
+        method.invoke(obj, null);
+        System.out.println(obj);
+        myClassLoader = null;
+
+        aClass = null;
+
+        obj = null;
+
+        method = null;
+
+        System.gc();
+        TimeUnit.SECONDS.sleep(5);
+        System.out.println("类卸载完成");
     }
 
     @Override
