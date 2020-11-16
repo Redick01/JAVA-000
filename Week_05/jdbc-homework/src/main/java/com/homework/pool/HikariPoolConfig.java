@@ -13,9 +13,9 @@ import java.sql.SQLException;
  */
 public class HikariPoolConfig {
 
-    private static final String DRIVER = "com.mysql,jdbc.Driver";
+    private static final String DRIVER = "com.mysql.jdbc.Driver";
 
-    private static final String URL = "jdbc:mysql://localhost:3306/test";
+    private static final String URL = "jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8";
 
     private static final String USERNAME = "root";
 
@@ -52,7 +52,7 @@ public class HikariPoolConfig {
         try {
             connection = getConnection();
             // 创建Statement对象
-            statement = connection.prepareStatement("select id, name from user;");
+            statement = connection.prepareStatement("select id, `name` from user;");
             // 执行sql，获取结果集
             resultSet = statement.getResultSet();
             while (resultSet.next()) {
@@ -93,10 +93,10 @@ public class HikariPoolConfig {
             String sql = "";
             switch (executeFlag) {
                 case INSERT:
-                    sql = "insert into user (name) value ('哈哈');";
+                    sql = "insert into user (`name`) value ('哈哈');";
                     break;
                 case UPDATE:
-                    sql = "update user set name='嘻嘻' where id=1;";
+                    sql = "update user set `name`='嘻嘻' where id=1;";
                     break;
                 case DELETE:
                     sql = "delete from user where id = 1;";
@@ -106,6 +106,7 @@ public class HikariPoolConfig {
 
             // 执行sql
             statement = connection.prepareStatement(sql);
+            statement.execute();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -130,17 +131,19 @@ public class HikariPoolConfig {
     public void transaction() {
         Connection connection = null;
         PreparedStatement statement = null;
+        ResultSet resultSet = null;
         try {
             connection = getConnection();
             connection.setAutoCommit(false);
 
-            String sql1 = "select id from user where name='嘻嘻';";
+            String sql1 = "select id from user where `name`='嘻嘻';";
             statement = connection.prepareStatement(sql1);
-            int id = statement.getResultSet().getInt("id");
-
-            String sql2 = "update user set name='嘻嘻' where id=" + id + ";";
-            connection.prepareStatement(sql2);
-
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String sql2 = "update user set `name`='哈哈' where id=" + id + ";";
+                connection.prepareStatement(sql2).execute();
+            }
             connection.commit();
         } catch (Exception e) {
             try {
@@ -163,5 +166,10 @@ public class HikariPoolConfig {
                 sqlException.printStackTrace();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        HikariPoolConfig config = new HikariPoolConfig();
+        config.cud(2);
     }
 }
