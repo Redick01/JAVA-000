@@ -37,6 +37,18 @@
      2)使用事务，PrepareStatement方式，批处理方式，改进上述操作。
      3)配置Hikari连接池，改进上述操作。提交代码到Github。（必做）
      作业位置：见jdbc-homework工程
+     
+#### 挑战作业1 基于AOP和自定义注解，实现MyCache(60)缓存
+```
+1、使用了Spring的AOP
+2、使用了guava的Cache
+3、由于时间关系，未实现指定缓存时间的缓，现在默认写后60秒，有时间补上
+4、作业参见springboot-homework-project工程
+   com.redick.cache.CacheC 是缓存模块
+   com.redick.aop 基于Spring AOP实现了"环绕增强"，将接口返回值缓存
+   com.redick.annotation 注解
+   com.redick.biz.controller 测试Controller
+```
 
 ### 学习笔记
 
