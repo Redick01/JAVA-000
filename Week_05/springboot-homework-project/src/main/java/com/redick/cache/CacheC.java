@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,22 +14,28 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class CacheC {
 
-    private final static Cache<Object, Object> CACHE;
+    private static Cache<Object, Object> CACHE;
 
-    static {
-        CACHE = CacheBuilder.newBuilder()
-                .maximumSize(100000)
-                .concurrencyLevel(8)
-                .expireAfterWrite(60, TimeUnit.SECONDS)
-                .build();
-    }
+
+
 
     public static Object getCache(Object key) throws Exception {
+        if (Objects.isNull(CACHE)) {
+            return null;
+        }
         return CACHE.getIfPresent(key);
     }
 
-    public static Object addCache(Object key, Object value) {
+    public static Object addCache(Object key, Object value, int expire, TimeUnit timeUnit) {
+        if (Objects.isNull(CACHE)) {
+            CACHE = CacheBuilder.newBuilder()
+                    .maximumSize(100000)
+                    .concurrencyLevel(8)
+                    .expireAfterWrite(expire, timeUnit)
+                    .build();
+        }
         CACHE.put(key, value);
         return value;
     }
+
 }

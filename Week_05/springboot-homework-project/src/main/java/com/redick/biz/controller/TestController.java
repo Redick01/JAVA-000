@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author Redick
@@ -18,7 +19,7 @@ import java.util.Objects;
 public class TestController {
 
     @RequestMapping("/cache/sayHello")
-    @MyCache
+    @MyCache(expireTime = 10, timeUnit = TimeUnit.SECONDS)
     public String sayHello(String str) {
         try {
             if (StringUtils.isBlank(str)) {
@@ -26,7 +27,7 @@ public class TestController {
                 return "null";
             }
             if (Objects.isNull(CacheC.getCache(str.hashCode()))) {
-                log.info("缓存不存在，直接返回");
+                log.info("缓存不存在");
                 return str;
             }
             log.info("从缓存中获取");
