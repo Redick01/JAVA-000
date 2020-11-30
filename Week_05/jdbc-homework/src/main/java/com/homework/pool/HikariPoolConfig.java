@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * @Author Redick
@@ -168,8 +169,55 @@ public class HikariPoolConfig {
         }
     }
 
+    public void insertValues(int num) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = getConnection();
+            String sql = "insert into tb_order (`order_no`, `user_id`, `refund_status`, `business_date`, `trans_amount`, `payment_amount`, `next_process_count`, `sharding_id`) values";
+            StringBuffer values = new StringBuffer();
+            int count = 0;
+            while (count < num) {
+                String orderNo = UUID.randomUUID().toString() + count;
+                int userId = count;
+                int shardingId = count % 10;
+                String value = "";
+                if (count == num - 1) {
+                    value = "(" + "'" + orderNo + "'," + "'" + userId + "'," + "'" + "00" + "'," + "'" + "20201129" + "'," + "'" + count + "'," + "'" + count + "'," + "'" + 0 + "'," + "'" + shardingId + "');";
+                } else {
+                    value = "(" + "'" + orderNo + "'," + "'" + userId + "'," + "'" + "00" + "'," + "'" + "20201129" + "'," + "'" + count + "'," + "'" + count + "'," + "'" + 0 + "'," + "'" + shardingId + "'),";
+                }
+                count++;
+                values.append(value);
+            }
+            sql = sql + values;
+            System.out.println(sql);
+            long start = System.currentTimeMillis();
+            // 执行sql
+            statement = connection.prepareStatement(sql);
+            statement.execute();
+            System.out.println("执行时间：" + String.valueOf(System.currentTimeMillis() - start));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // 关闭操作
+                if (null != statement) {
+                    statement.close();
+                }
+                // 关闭连接
+                if (null != connection) {
+                    connection.close();
+                }
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         HikariPoolConfig config = new HikariPoolConfig();
-        config.cud(2);
+        //config.cud(2);
+        config.insertValues(1000000);
     }
 }
