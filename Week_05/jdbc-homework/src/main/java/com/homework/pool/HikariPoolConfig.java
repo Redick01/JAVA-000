@@ -16,7 +16,7 @@ public class HikariPoolConfig {
 
     private static final String DRIVER = "com.mysql.jdbc.Driver";
 
-    private static final String URL = "jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8";
+    private static final String URL = "jdbc:mysql://192.168.3.97:3316/test?useUnicode=true&characterEncoding=utf8";
 
     private static final String USERNAME = "root";
 
@@ -38,7 +38,9 @@ public class HikariPoolConfig {
         dataSource.setConnectionTimeout(30000);
         dataSource.setIdleTimeout(600000);
         dataSource.setMaxLifetime(1800000);
-        dataSource.setMaximumPoolSize(10);
+        dataSource.setConnectionTestQuery("SELECT 1");
+        dataSource.setMaximumPoolSize(60);
+        dataSource.setMinimumIdle(10);
         return dataSource.getConnection();
     }
 
@@ -195,7 +197,9 @@ public class HikariPoolConfig {
             long start = System.currentTimeMillis();
             // 执行sql
             statement = connection.prepareStatement(sql);
-            statement.execute();
+            statement.addBatch();
+            statement.executeBatch();
+            connection.commit();
             System.out.println("执行时间：" + String.valueOf(System.currentTimeMillis() - start));
         } catch (Exception e) {
             e.printStackTrace();
