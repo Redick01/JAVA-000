@@ -1,9 +1,73 @@
 ## 作业
 
+
+
+#### 必做 读写分离-动态切换数据源版本1.0 （结合了mybatis）
 ```
-2、(必做)读写分离-动态切换数据源版本1.0 
-3、(必做)读写分离-数据库框架版本2.0
-这两个作业未能按时完成，本周末补齐
+直接定义两个数据源，基于APO和AbstractRoutingDataSource实现动态读写分离
+作业内容：com.jdbc.homework.config.DynamicDataSource
+
+```
+
+#### 必做 读写分离-数据库框架版本2.0
+使用sharding-jdbc+mybatis实现读写分离
+作业内容：见dynamic-datasource-shardingjdbc工程，测试代码参见com.homework.dynamicdatasource.controller.OrderController，application.yml内容如下：
+```
+spring:
+  shardingsphere:
+    datasource:
+      names:
+        master,slave
+      # 主数据源
+      master:
+        type: com.zaxxer.hikari.HikariDataSource
+        hikari:
+          maximum-pool-size: 20
+          max-lifetime: 30000
+          idle-timeout: 30000
+          data-source-properties:
+            prepStmtCacheSize: 250
+            prepStmtCacheSqlLimit: 2048
+            cachePrepStmts: true
+            useServerPrepStmts: true
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.3.97:3316/test?useUnicode=true&characterEncoding=utf8
+        username: root
+        password: root
+      # 从数据源
+      slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        hikari:
+          maximum-pool-size: 20
+          max-lifetime: 30000
+          idle-timeout: 30000
+          data-source-properties:
+            prepStmtCacheSize: 250
+            prepStmtCacheSqlLimit: 2048
+            cachePrepStmts: true
+            useServerPrepStmts: true
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.3.97:3326/test?useUnicode=true&characterEncoding=utf8
+        username: root
+        password: root
+      masterslave:
+        # 读写分离配置
+        load-balance-algorithm-type: round_robin
+        # 最终的数据源名称
+        name: dataSource
+        # 主库数据源名称
+        master-data-source-name: master
+        # 从库数据源名称列表，多个逗号分隔
+        slave-data-source-names: slave
+      props:
+        # 开启SQL显示，默认false
+        sql:
+          show: true
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+server:
+  address: 127.0.0.1
+  port: 8080
 ```
 
 #### 必做1 按自己设计的表结构，插入100万订单模拟数据，测试不同方式的插入效率。
