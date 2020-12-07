@@ -1,0 +1,38 @@
+
+spring:
+  shardingsphere:
+    datasource:
+      names:
+        ds1
+      # 数据源
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        hikari:
+          maximum-pool-size: 20
+          max-lifetime: 30000
+          idle-timeout: 30000
+          data-source-properties:
+            prepStmtCacheSize: 250
+            prepStmtCacheSqlLimit: 2048
+            cachePrepStmts: true
+            useServerPrepStmts: true
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.3.97:3316/test_1?useUnicode=true&characterEncoding=utf8
+        username: root
+        password: root
+    # 分表
+    sharding:
+      tables:
+        tb_order:
+          table-strategy:
+            inline:
+              shardingColumn: user_id
+              algorithm-expression: tb_order_$->{user_id % 8}
+    props:
+      sql.show: true
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+server:
+  address: 127.0.0.1
+  port: 8081
