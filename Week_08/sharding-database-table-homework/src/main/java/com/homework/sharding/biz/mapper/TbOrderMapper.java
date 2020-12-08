@@ -7,5 +7,5 @@ import tk.mybatis.mapper.common.Mapper;
 @org.apache.ibatis.annotations.Mapper
 public interface TbOrderMapper extends Mapper<TbOrder> {
 
-    TbOrder selectByOrderNo(@Param("orderNo") String orderNo);
+    TbOrder selectByUserIdAndOrderNo(@Param("userId") long userId, @Param("orderNo") String orderNo);
 }

@@ -1,5 +1,6 @@
 package com.homework.sharding.biz.controller;
 
+import com.homework.sharding.biz.entity.TbOrder;
 import com.homework.sharding.biz.service.TbOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class TbOrderController {
 
-    private TbOrderService tbOrderService;
+    private final TbOrderService tbOrderService;
 
     @Autowired
     public TbOrderController(TbOrderService tbOrderService) {
@@ -32,5 +33,15 @@ public class TbOrderController {
             return "FAILED";
         }
         return "SUCCESS";
+    }
+
+    @RequestMapping(value = "/shardingTable/queryOrder", method = RequestMethod.GET)
+    public TbOrder addOrder(@RequestBody Long userId, String orderNo) {
+        try {
+            return tbOrderService.getOrder(orderNo, userId);
+        } catch (Exception e) {
+            log.error("==>异常：{[]}", e);
+            return null;
+        }
     }
 }

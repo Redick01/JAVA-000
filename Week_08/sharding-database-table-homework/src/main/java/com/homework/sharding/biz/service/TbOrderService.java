@@ -18,7 +18,7 @@ import java.util.UUID;
 @Service
 public class TbOrderService {
 
-    private TbOrderMapper tbOrderMapper;
+    private final TbOrderMapper tbOrderMapper;
 
     @Autowired
     public TbOrderService(TbOrderMapper tbOrderMapper) {
@@ -35,5 +35,15 @@ public class TbOrderService {
         order.setUserId(userId);
         order.setOrderNo(String.valueOf(SnowFlakeUtil.generateKey().longValue()));
         tbOrderMapper.insertSelective(order);
+    }
+
+    /**
+     * query order info by order_no and user_id
+     * @param orderNo order_no
+     * @param userId user_id
+     * @return order info
+     */
+    public TbOrder getOrder(String orderNo, Long userId) {
+        return tbOrderMapper.selectByUserIdAndOrderNo(userId, orderNo);
     }
 }
