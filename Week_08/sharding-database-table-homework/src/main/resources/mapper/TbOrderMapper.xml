@@ -131,7 +131,7 @@
     -->
     remark
   </sql>
-  <select id="selectByUserIdAndOrderNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByUserIdAndOrderNo" parameterType="java.lang.Object" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     ,

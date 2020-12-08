@@ -4,10 +4,9 @@ import com.homework.sharding.biz.entity.TbOrder;
 import com.homework.sharding.biz.service.TbOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Redick
@@ -25,6 +24,7 @@ public class TbOrderController {
     }
 
     @RequestMapping(value = "/shardingTable/addOrder", method = RequestMethod.POST)
+    @ResponseBody
     public String addOrder(@RequestBody Long userId) {
         try {
             tbOrderService.addOrder(userId);
@@ -36,7 +36,8 @@ public class TbOrderController {
     }
 
     @RequestMapping(value = "/shardingTable/queryOrder", method = RequestMethod.GET)
-    public TbOrder addOrder(@RequestBody Long userId, String orderNo) {
+    @ResponseBody
+    public List<TbOrder> queryOrder(Long userId, String orderNo) {
         try {
             return tbOrderService.getOrder(orderNo, userId);
         } catch (Exception e) {

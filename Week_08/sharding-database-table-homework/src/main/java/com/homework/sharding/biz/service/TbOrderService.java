@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,7 +44,8 @@ public class TbOrderService {
      * @param userId user_id
      * @return order info
      */
-    public TbOrder getOrder(String orderNo, Long userId) {
-        return tbOrderMapper.selectByUserIdAndOrderNo(userId, orderNo);
+    public List<TbOrder> getOrder(String orderNo, Long userId) {
+
+        return tbOrderMapper.selectAll();
     }
 }
