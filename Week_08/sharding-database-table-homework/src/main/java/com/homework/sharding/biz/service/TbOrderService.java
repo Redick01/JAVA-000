@@ -30,12 +30,12 @@ public class TbOrderService {
      * add order
      * @param userId user_id
      */
-    public void addOrder(Long userId) {
+    public void addOrder(Integer userId) {
         TbOrder order = new TbOrder();
         order.setBusinessDate(DateUtil.getDateTimeStr(new Date(), DateUtil.YYYY_MM_DD));
-        order.setUserId(userId);
+        order.setUserId((long)userId);
         order.setOrderNo(String.valueOf(SnowFlakeUtil.generateKey().longValue()));
-        tbOrderMapper.insertSelective(order);
+        tbOrderMapper.insertOrder(order);
     }
 
     /**
@@ -44,8 +44,8 @@ public class TbOrderService {
      * @param userId user_id
      * @return order info
      */
-    public List<TbOrder> getOrder(String orderNo, Long userId) {
+    public TbOrder getOrder(String orderNo, Long userId) {
 
-        return tbOrderMapper.selectAll();
+        return tbOrderMapper.selectByUserIdAndOrderNo(userId, orderNo);
     }
 }

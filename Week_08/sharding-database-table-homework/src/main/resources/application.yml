@@ -1,11 +1,10 @@
-
 spring:
   shardingsphere:
     datasource:
       names:
-        ds0,ds1
+        datasource0,datasource1
       # 数据源
-      ds0:
+      datasource0:
         type: com.zaxxer.hikari.HikariDataSource
         hikari:
           maximum-pool-size: 20
@@ -16,11 +15,11 @@ spring:
             prepStmtCacheSqlLimit: 2048
             cachePrepStmts: true
             useServerPrepStmts: true
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.3.97:3316/test_0?useUnicode=true&characterEncoding=utf8
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.150.132:3316/test_0?useUnicode=true&characterEncoding=utf8
         username: root
-        password: root
-      ds1:
+        password: admin123
+      datasource1:
         type: com.zaxxer.hikari.HikariDataSource
         hikari:
           maximum-pool-size: 20
@@ -31,29 +30,26 @@ spring:
             prepStmtCacheSqlLimit: 2048
             cachePrepStmts: true
             useServerPrepStmts: true
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.3.97:3326/test_1?useUnicode=true&characterEncoding=utf8
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.150.132:3326/test_1?useUnicode=true&characterEncoding=utf8
         username: root
-        password: root
+        password: admin123
     sharding:
       # 分库策略
       default-database-strategy:
         inline:
           sharding-column: user_id
-          algorithm-expression: test_$->{user_id % 2}
+          algorithm-expression: datasource$->{user_id % 2}
       # 分表策略
       tables:
         tb_order:
+          actual-data-nodes: datasource$->{0..1}.tb_order_$->{0..7}
           table-strategy:
             inline:
               sharding-column: user_id
               algorithm-expression: tb_order_$->{user_id % 8}
-              actualDataNodes: = test_$->{0..1}.tb_order_$->{0..7}
     props:
       sql.show: true
-
-mybatis:
-  mapper-locations: classpath:/mapper/*.xml
 server:
   address: 127.0.0.1
   port: 8081

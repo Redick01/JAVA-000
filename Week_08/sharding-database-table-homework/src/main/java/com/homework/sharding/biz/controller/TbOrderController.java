@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @author Redick
  * @date 2020/12/8 1:47 下午
@@ -25,8 +23,11 @@ public class TbOrderController {
 
     @RequestMapping(value = "/shardingTable/addOrder", method = RequestMethod.POST)
     @ResponseBody
-    public String addOrder(@RequestBody Long userId) {
+    public String addOrder(Integer userId) {
         try {
+            if (null == userId) {
+                userId = 11;
+            }
             tbOrderService.addOrder(userId);
         } catch (Exception e) {
             log.error("==>异常：{[]}", e);
@@ -37,7 +38,7 @@ public class TbOrderController {
 
     @RequestMapping(value = "/shardingTable/queryOrder", method = RequestMethod.GET)
     @ResponseBody
-    public List<TbOrder> queryOrder(Long userId, String orderNo) {
+    public TbOrder queryOrder(Long userId, String orderNo) {
         try {
             return tbOrderService.getOrder(orderNo, userId);
         } catch (Exception e) {
