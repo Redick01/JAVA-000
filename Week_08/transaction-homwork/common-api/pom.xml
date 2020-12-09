@@ -11,5 +11,8 @@
 
     <artifactId>common-api</artifactId>
 
+    <dependencies>
+
+    </dependencies>
 
 </project>

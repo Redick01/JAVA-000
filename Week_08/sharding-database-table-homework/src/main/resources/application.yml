@@ -16,9 +16,9 @@ spring:
             cachePrepStmts: true
             useServerPrepStmts: true
         driver-class-name: com.mysql.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.150.132:3316/test_0?useUnicode=true&characterEncoding=utf8
+        jdbc-url: jdbc:mysql://192.168.3.97:3316/test_0?useUnicode=true&characterEncoding=utf8
         username: root
-        password: admin123
+        password: root
       datasource1:
         type: com.zaxxer.hikari.HikariDataSource
         hikari:
@@ -31,9 +31,9 @@ spring:
             cachePrepStmts: true
             useServerPrepStmts: true
         driver-class-name: com.mysql.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.150.132:3326/test_1?useUnicode=true&characterEncoding=utf8
+        jdbc-url: jdbc:mysql://192.168.3.97:3326/test_1?useUnicode=true&characterEncoding=utf8
         username: root
-        password: admin123
+        password: root
     sharding:
       # 分库策略
       default-database-strategy:
