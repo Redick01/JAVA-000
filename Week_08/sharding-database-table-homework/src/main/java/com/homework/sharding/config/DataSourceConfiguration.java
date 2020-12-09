@@ -84,10 +84,10 @@ public class DataSourceConfiguration {
         dataSourceMap.put("datasource0", dataSource0());
         dataSourceMap.put("datasource1", dataSource1());
 
-        TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("tb_order", "datasource${0..1}.tb_order_${0..7}");
+        TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("tb_order", "datasource${0..1}.tb_order_${0..15}");
         // 配置分库 + 分表策略
         orderTableRuleConfig.setDatabaseShardingStrategyConfig(new InlineShardingStrategyConfiguration("user_id", "datasource${user_id % 2}"));
-        orderTableRuleConfig.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration("user_id", "tb_order_${user_id % 8}"));
+        orderTableRuleConfig.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration("user_id", "tb_order_${user_id % 16}"));
 
 
         shardingRuleConfig.getTableRuleConfigs().add(orderTableRuleConfig);
