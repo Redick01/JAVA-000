@@ -9,6 +9,11 @@ import org.dromara.hmily.annotation.Hmily;
  */
 public interface AccountService {
 
+    /**
+     * 支付
+     * @param requestDTO
+     * @return
+     */
     @Hmily
     boolean pay(PayAccountRequestDTO requestDTO);
 }

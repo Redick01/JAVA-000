@@ -21,7 +21,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @PropertySource("classpath:jdbc.properties")
-@MapperScan(basePackages = "com.account.mapper", sqlSessionTemplateRef = "sqlSessionTemplate")
+@MapperScan(basePackages = "com.order.mapper", sqlSessionTemplateRef = "sqlSessionTemplate")
 public class OrderDataSourceConfiguration {
 
     @Value("${mysql.order.url}")

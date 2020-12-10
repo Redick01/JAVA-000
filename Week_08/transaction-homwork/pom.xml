@@ -24,10 +24,11 @@
     </modules>
 
     <properties>
-        <curator.version>5.1.0</curator.version>
+        <curator.version>4.2.0</curator.version>
         <dubbo.version>2.6.5</dubbo.version>
-        <zookeeper.version>3.6.0</zookeeper.version>
+        <zookeeper.version>3.4.5</zookeeper.version>
         <hmily.version>2.1.1</hmily.version>
+        <springfox.version>2.6.1</springfox.version>
     </properties>
 
     <dependencies>
@@ -62,6 +63,12 @@
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
             <version>${zookeeper.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

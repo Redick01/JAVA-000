@@ -11,9 +11,20 @@
 
     <dubbo:registry protocol="zookeeper" address="${zk.address}" />
 
-    <dubbo:service interface="api.OrderService"
-                   ref="orderService"
-                   version="1.0.0"
-                   protocol="dubbo"
-                   timeout="12000" />
+    <dubbo:protocol name="dubbo" port="28084"
+                    threads="1000"
+                    accepts="0" />
+
+    <dubbo:reference interface="api.AccountService"
+                     id="accountService"
+                     protocol="dubbo"
+                     version="1.0.0"
+                     timeout="12000"
+                     check="false"/>
+    <dubbo:reference interface="api.StockService"
+                     id="stockService"
+                     protocol="dubbo"
+                     version="1.0.0"
+                     timeout="12000"
+                     check="false"/>
 </beans>
