@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.homework.rpc.api.RpcfxRequest;
 import com.homework.rpc.api.RpcfxResponse;
+import com.homework.rpc.exception.RpcfxException;
+import com.homework.rpc.util.HttpClientUtil;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -53,32 +55,32 @@ public class Rpcfx {
             request.setServiceClass(this.serviceClass.getName());
             request.setMethod(method.getName());
             request.setParams(args);
-
             RpcfxResponse response = doPost(request, url);
-
-            // 这里判断response.status，处理异常
-            // 考虑封装一个全局的RpcfxException
-
-            return JSON.parse(response.getResult().toString());
+            if (response.isStatus()) {
+                return JSON.parse(response.getResult().toString());
+            } else {
+                throw new RpcfxException(response.getException());
+            }
         }
 
         /**
-         * Netty HttpClient
+         * HttpClient
          * @return rpc response
          */
-        private RpcfxResponse doPost(RpcfxRequest req, String url) throws IOException {
+        private RpcfxResponse doPost(RpcfxRequest req, String url) throws Exception {
             String reqJson = JSON.toJSONString(req);
             System.out.println("req json: "+reqJson);
-
-            // 1.可以复用client
-            // 2.尝试使用httpclient或者netty client
-            OkHttpClient client = new OkHttpClient();
+           /* OkHttpClient client = new OkHttpClient();
             final Request request = new Request.Builder()
                     .url(url)
                     .post(RequestBody.create(JSONTYPE, reqJson))
                     .build();
             String respJson = client.newCall(request).execute().body().string();
-            System.out.println("resp json: "+respJson);
+            System.out.println("resp json: "+respJson);*/
+
+            // 1.使用HttpClient实现，使用线程池处理请求
+            HttpClientUtil httpClientUtil = new HttpClientUtil(url);
+            String respJson = httpClientUtil.handle(reqJson);
             return JSON.parseObject(respJson, RpcfxResponse.class);
         }
     }

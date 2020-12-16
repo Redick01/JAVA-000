@@ -6,6 +6,7 @@ import com.homework.rpc.LocalRegisterCenter;
 import com.homework.rpc.api.RpcfxRequest;
 import com.homework.rpc.api.RpcfxResolver;
 import com.homework.rpc.api.RpcfxResponse;
+import com.homework.rpc.exception.RpcfxException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,13 +27,7 @@ public class RpcfxInvoker {
     public RpcfxResponse invoke(RpcfxRequest request) {
         RpcfxResponse response = new RpcfxResponse();
         String serviceClass = request.getServiceClass();
-
-
-        // Object service = resolver.resolve(serviceClass);
-        // this.applicationContext.getBean(serviceClass);
-
         try {
-            // 作业1：改成泛型和反射
             // 这里实现的是写一个本地的注册中心，从注册中心获取实现类，然后通过反射创建实现累的对象
             Object service = Class.forName(LocalRegisterCenter.getInstance().getImplName(serviceClass)).newInstance();
             Method method = resolveMethodFromClass(service.getClass(), request.getMethod());
@@ -42,13 +37,8 @@ public class RpcfxInvoker {
             response.setStatus(true);
             return response;
         } catch ( IllegalAccessException | InvocationTargetException | ClassNotFoundException | InstantiationException e) {
-
-            // 3.Xstream
-
-            // 2.封装一个统一的RpcfxException
-            // 客户端也需要判断异常
             e.printStackTrace();
-            response.setException(e);
+            response.setException(new RpcfxException(e));
             response.setStatus(false);
             return response;
         }
