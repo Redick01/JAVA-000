@@ -1,3 +1,19 @@
+## 作业
+
+#### 作业1
+```
+rpcfx-core
+1.HttpClientUtil.java使用httpclient4实现http客户端，使用线程池异步处理。
+2.exception包自定义RpcfxException
+3.LocalRegisterCenter.java实现本地注册中心
+```
+
+#### 作业2
+```
+dubbo+hmily作业在transaction-homework-hmily工程
+```
+
+
 ## 学习笔记 
 
 #### 柔性事务的本质

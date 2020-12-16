@@ -20,6 +20,7 @@ public class DollarAccountServiceImpl implements AccountService {
     @Override
     @HmilyTCC(confirmMethod = "confirm", cancelMethod = "cancel")
     public boolean exchange(PayAccountRequestDTO requestDTO) {
+
         return true;
     }
 
