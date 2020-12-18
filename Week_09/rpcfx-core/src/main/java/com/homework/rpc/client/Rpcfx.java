@@ -2,10 +2,12 @@ package com.homework.rpc.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
-import com.homework.rpc.api.RpcfxRequest;
-import com.homework.rpc.api.RpcfxResponse;
+import com.homework.rpc.api.*;
 import com.homework.rpc.exception.RpcfxException;
 import com.homework.rpc.util.HttpClientUtil;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,6 +17,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Redick
@@ -26,11 +30,35 @@ public class Rpcfx {
         ParserConfig.getGlobalInstance().addAccept("io.redick");
     }
 
-    public static <T> T create(final Class<T> serviceClass, final String url) {
+    public static <T, filters> T createFromRegistry(final Class<T> serviceClass, final String zkUrl, Router router, LoadBalancer loadBalance, Filter filter) throws Exception {
+
+        // 加filte之一
+
+        // curator Provider list from zk
+        List<String> invokers = new ArrayList<>();
+        // 1. 简单：从zk拿到服务提供的列表
+        // 2. 挑战：监听zk的临时节点，根据事件更新这个list（注意，需要做个全局map保持每个服务的提供者List）
+
+        List<String> urls = router.route(invokers);
+
+        String url = loadBalance.select(urls); // router, loadbalance
+
+        return (T) create(serviceClass, url, filter);
+
+    }
+
+
+    public static <T> T create(final Class<T> serviceClass, final String url, Filter... filters) throws Exception {
 
         // 0. 替换动态代理 -> AOP
-        return (T) Proxy.newProxyInstance(Rpcfx.class.getClassLoader(), new Class[]{serviceClass}, new RpcfxInvocationHandler(serviceClass, url));
-
+        //return (T) Proxy.newProxyInstance(Rpcfx.class.getClassLoader(), new Class[]{serviceClass}, new RpcfxInvocationHandler(serviceClass, url));
+        return (T) new ByteBuddy().subclass(Object.class)
+                .implement(serviceClass)
+                .intercept(InvocationHandlerAdapter.of(new RpcfxInvocationHandler(serviceClass, url)))
+                .make()
+                .load(serviceClass.getClassLoader(), ClassLoadingStrategy.Default.INJECTION)
+                .getLoaded()
+                .newInstance();
     }
 
     /**
