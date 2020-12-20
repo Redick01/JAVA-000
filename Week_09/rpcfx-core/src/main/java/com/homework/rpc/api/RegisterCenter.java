@@ -1,5 +1,7 @@
 package com.homework.rpc.api;
 
+import java.util.List;
+
 /**
  * @author liupenghui
  * @date 2020/12/15 7:05 下午
@@ -19,4 +21,12 @@ public interface RegisterCenter {
      * @return interface impl name
      */
     String getImplName(String serviceName);
+
+    /**
+     * get impl list
+     * @param nameSpace
+     * @return
+     * @throws Exception
+     */
+    List<String> getChildren(String nameSpace) throws Exception;
 }

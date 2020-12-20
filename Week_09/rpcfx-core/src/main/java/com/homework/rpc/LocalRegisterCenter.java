@@ -2,6 +2,7 @@ package com.homework.rpc;
 
 import com.homework.rpc.api.RegisterCenter;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,5 +37,10 @@ public class LocalRegisterCenter implements RegisterCenter {
             }
         }
         return instance;
+    }
+
+    @Override
+    public List<String> getChildren(String nameSpace) throws Exception {
+        return null;
     }
 }
