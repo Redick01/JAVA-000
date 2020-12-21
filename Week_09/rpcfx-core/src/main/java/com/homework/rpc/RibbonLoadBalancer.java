@@ -6,6 +6,7 @@ import com.netflix.loadbalancer.LoadBalancerBuilder;
 import com.netflix.loadbalancer.Server;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,16 +15,16 @@ import java.util.List;
  */
 public class RibbonLoadBalancer implements LoadBalancer {
 
-    private final ILoadBalancer iLoadBalancer;
-
-
-    public RibbonLoadBalancer(List<Server> serverList) {
-        iLoadBalancer = LoadBalancerBuilder.newBuilder().buildFixedServerListLoadBalancer(serverList);
-    }
-
 
     @Override
-    public String select(List<String> serverList) {
-        return iLoadBalancer.chooseServer(serverList).getHost();
+    public String select(List<String> strings) {
+        List<Server> serverList = new ArrayList<>();
+        for (String serverClass : strings) {
+            Server server = new Server(serverClass);
+            serverList.add(server);
+        }
+        ILoadBalancer iLoadBalancer = LoadBalancerBuilder.newBuilder().buildFixedServerListLoadBalancer(serverList);
+        Server server = iLoadBalancer.chooseServer(null);
+        return server.getId();
     }
 }

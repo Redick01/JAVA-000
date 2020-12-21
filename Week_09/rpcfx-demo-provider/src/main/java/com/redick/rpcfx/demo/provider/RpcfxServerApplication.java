@@ -27,7 +27,7 @@ public class RpcfxServerApplication {
 		//LocalRegisterCenter.getInstance().register(UserService.class.getName(), UserServiceImpl.class.getName());
 		//LocalRegisterCenter.getInstance().register(OrderService.class.getName(), OrderServiceImpl.class.getName());
 		// 注册到zk
-		RegisterCenter registry = new ZkRegistry("192.168.3.97:2181", "Rpcfx");
+		RegisterCenter registry = new ZkRegistry("192.168.58.45:2181", "Rpcfx");
 		registry.register(UserService.class.getName(), UserServiceImpl.class.getName());
 		registry.register(OrderService.class.getName(), OrderServiceImpl.class.getName());
 		SpringApplication.run(RpcfxServerApplication.class, args);

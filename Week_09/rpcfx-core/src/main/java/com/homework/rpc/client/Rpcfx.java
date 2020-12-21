@@ -33,7 +33,7 @@ public class Rpcfx {
 
     public static <T, filters> T createFromRegistry(final Class<T> serviceClass, final String zkUrl, Router router, LoadBalancer loadBalance, Filter filter) throws Exception {
 
-        // 加filte之一
+        // 加filter之一
 
         // curator Provider list from zk
         RegisterCenter registry = new ZkRegistry(zkUrl, "Rpcfx");
