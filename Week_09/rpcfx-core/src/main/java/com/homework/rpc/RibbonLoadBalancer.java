@@ -25,6 +25,6 @@ public class RibbonLoadBalancer implements LoadBalancer {
         }
         ILoadBalancer iLoadBalancer = LoadBalancerBuilder.newBuilder().buildFixedServerListLoadBalancer(serverList);
         Server server = iLoadBalancer.chooseServer(null);
-        return server.getId();
+        return server.getHost();
     }
 }

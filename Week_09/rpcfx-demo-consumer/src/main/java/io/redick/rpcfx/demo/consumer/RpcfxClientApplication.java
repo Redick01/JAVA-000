@@ -18,7 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RpcfxClientApplication {
 
     public static void main(String[] args) throws Exception {
-        UserService userService = Rpcfx.createFromRegistry(UserService.class, "192.168.58.45:2181",
+        UserService userService = Rpcfx.createFromRegistry(UserService.class, "192.168.3.78:2181",
                 new DefaultRouter(), new RibbonLoadBalancer(), new TestFilter());
         User user = userService.findById(1);
         System.out.println("find user id=1 from server: " + user.getName());
