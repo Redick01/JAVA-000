@@ -1,7 +1,7 @@
 package io.redick.rpcfx.demo.consumer;
 
-import com.homework.rpc.DefaultRouter;
-import com.homework.rpc.RibbonLoadBalancer;
+import com.homework.rpc.router.DefaultRouter;
+import com.homework.rpc.loadbalancer.RibbonLoadBalancer;
 import com.homework.rpc.client.Rpcfx;
 import com.homework.rpc.filter.TestFilter;
 import io.redick.rpcfx.demo.api.OrderService;
@@ -18,12 +18,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RpcfxClientApplication {
 
     public static void main(String[] args) throws Exception {
-        UserService userService = Rpcfx.createFromRegistry(UserService.class, "192.168.3.78:2181",
+        UserService userService = Rpcfx.createFromRegistry(UserService.class, "192.168.58.45:2181",
                 new DefaultRouter(), new RibbonLoadBalancer(), new TestFilter());
         User user = userService.findById(1);
         System.out.println("find user id=1 from server: " + user.getName());
 
-        OrderService orderService = Rpcfx.create(OrderService.class, "http://localhost:8080/");
+        OrderService orderService = Rpcfx.createFromRegistry(OrderService.class, "192.168.58.45:2181",
+                new DefaultRouter(), new RibbonLoadBalancer(), new TestFilter());
         Order order = orderService.findOrderById(1992129);
         System.out.println(String.format("find order name=%s, amount=%f",order.getName(),order.getAmount()));
     }

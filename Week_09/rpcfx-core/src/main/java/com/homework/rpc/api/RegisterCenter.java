@@ -11,9 +11,9 @@ public interface RegisterCenter {
     /**
      * register interface
      * @param serviceName interface name
-     * @param implName interface impl name
+     * @param port port
      */
-    void register(String serviceName, String implName);
+    void register(String serviceName, Integer port);
 
     /**
      * get register impl name

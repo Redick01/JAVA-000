@@ -1,15 +1,17 @@
-package com.homework.rpc;
+package com.homework.rpc.reigister;
 
 import com.homework.rpc.api.RegisterCenter;
+import com.homework.rpc.api.ServiceProviderDesc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.state.ConnectionStateListener;
-import org.apache.curator.retry.RetryNTimes;
+import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.Watcher;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,17 +20,17 @@ import java.util.concurrent.TimeUnit;
  * @date 2020/12/18 11:36 下午
  */
 @Slf4j
-public class ZkRegistry implements RegisterCenter {
+public class ZookeeperRegistry implements RegisterCenter {
 
     private final CuratorFramework zkClient;
 
 
-    public ZkRegistry(String hostPort, String nameSpace) {
+    public ZookeeperRegistry(String hostPort, String nameSpace) {
         try {
             CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
-                    .namespace(nameSpace)
                     .connectString(hostPort)
-                    .retryPolicy(new RetryNTimes(1, 1000))
+                    .namespace(nameSpace)
+                    .retryPolicy(new ExponentialBackoffRetry(1000, 3))
                     .connectionTimeoutMs(5000)
                     .sessionTimeoutMs(60000);
             zkClient = builder.build();
@@ -44,12 +46,22 @@ public class ZkRegistry implements RegisterCenter {
     }
 
     @Override
-    public void register(String serviceName, String implName) {
+    public void register(String serviceName, Integer port) {
         try {
+            ServiceProviderDesc serviceProviderDesc = ServiceProviderDesc.builder()
+                    .host(InetAddress.getLocalHost().getHostAddress())
+                    .port(port)
+                    .serviceClass(serviceName)
+                    .build();
+            if (null == zkClient.checkExists().forPath("/" + serviceName)) {
+                zkClient.create()
+                        .creatingParentContainersIfNeeded()
+                        .withMode(CreateMode.PERSISTENT)
+                        .forPath("/" + serviceName, "service".getBytes());
+            }
             zkClient.create()
-                    .creatingParentContainersIfNeeded()
                     .withMode(CreateMode.EPHEMERAL)
-                    .forPath(serviceName);
+                    .forPath("/" + serviceName + "/" + serviceProviderDesc.getHost() + ":" + serviceProviderDesc.getPort(), "provider".getBytes());
         } catch (KeeperException.NodeExistsException e) {
             log.warn("Node" + serviceName + "already exists.", e);
         } catch (Exception e) {
@@ -58,14 +70,13 @@ public class ZkRegistry implements RegisterCenter {
     }
 
     public static void main(String[] args) throws Exception {
-        ZkRegistry zkRegistry = new ZkRegistry("192.168.3.97:2181", "222");
-        zkRegistry.register("/order", "111");
-        System.out.println("111");
-        String s = zkRegistry.getNodeData("/order");
+        ZookeeperRegistry zookeeperRegistry = new ZookeeperRegistry("192.168.58.45:2181", "Rpcfx");
+        zookeeperRegistry.register(ZookeeperRegistry.class.getName(), 8080);
+        String s = zookeeperRegistry.getNodeData(ZookeeperRegistry.class.getName());
 
         System.out.println(s);
 
-        List<String> stringList = zkRegistry.getChildren("/");
+        List<String> stringList = zookeeperRegistry.getChildren(ZookeeperRegistry.class.getName());
         for (String s1 : stringList) {
             System.out.println(s1);
         }
@@ -84,7 +95,7 @@ public class ZkRegistry implements RegisterCenter {
      */
     @Override
     public List<String> getChildren(String nameSpace) throws Exception {
-        return zkClient.getChildren().forPath(nameSpace);
+        return zkClient.getChildren().forPath("/" + nameSpace);
     }
 
     /**
@@ -94,7 +105,7 @@ public class ZkRegistry implements RegisterCenter {
      * @throws Exception exception
      */
     public String getNodeData(String serviceName) throws Exception {
-        return new String(zkClient.getData().forPath(serviceName));
+        return new String(zkClient.getData().forPath("/" + serviceName));
     }
 
     public void watchNode(String serviceName, Watcher watcher) throws Exception {

@@ -8,5 +8,5 @@ import java.util.List;
  */
 public interface Router {
 
-    List<String> route(List<String> invokers, String serviceClass);
+    List<String> route(List<String> invokers);
 }

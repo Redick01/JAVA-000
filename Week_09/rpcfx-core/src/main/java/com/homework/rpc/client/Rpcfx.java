@@ -2,7 +2,7 @@ package com.homework.rpc.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
-import com.homework.rpc.ZkRegistry;
+import com.homework.rpc.reigister.ZookeeperRegistry;
 import com.homework.rpc.api.*;
 import com.homework.rpc.exception.RpcfxException;
 import com.homework.rpc.util.HttpClientUtil;
@@ -10,15 +10,9 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,13 +30,13 @@ public class Rpcfx {
         // 加filter之一
 
         // curator Provider list from zk
-        RegisterCenter registry = new ZkRegistry(zkUrl, "Rpcfx");
-        List<String> invokers = registry.getChildren("/");
+        RegisterCenter registry = new ZookeeperRegistry(zkUrl, "Rpcfx");
+        List<String> invokers = registry.getChildren(serviceClass.getName());
         // 1. 简单：从zk拿到服务提供的列表
         // 2. 挑战：监听zk的临时节点，根据事件更新这个list（注意，需要做个全局map保持每个服务的提供者List）
-        List<String> urls = router.route(invokers, serviceClass.getName());
+        List<String> urls = router.route(invokers);
 
-        String url = loadBalance.select(urls); // router, loadbalance
+        String url = loadBalance.select(urls);
 
         return (T) create(serviceClass, url, filter);
 

@@ -1,4 +1,4 @@
-package com.homework.rpc;
+package com.homework.rpc.loadbalancer;
 
 import com.homework.rpc.api.LoadBalancer;
 import com.netflix.loadbalancer.ILoadBalancer;
@@ -25,6 +25,6 @@ public class RibbonLoadBalancer implements LoadBalancer {
         }
         ILoadBalancer iLoadBalancer = LoadBalancerBuilder.newBuilder().buildFixedServerListLoadBalancer(serverList);
         Server server = iLoadBalancer.chooseServer(null);
-        return server.getHost();
+        return "http://" + server.getId() + "/";
     }
 }

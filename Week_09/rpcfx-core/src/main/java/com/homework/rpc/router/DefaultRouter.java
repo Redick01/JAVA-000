@@ -1,4 +1,4 @@
-package com.homework.rpc;
+package com.homework.rpc.router;
 
 import com.homework.rpc.api.Router;
 
@@ -12,11 +12,9 @@ import java.util.List;
 public class DefaultRouter implements Router {
 
     @Override
-    public List<String> route(List<String> invokers, String serviceClass) {
+    public List<String> route(List<String> invokers) {
         for (String invoker : invokers) {
-            if (invoker.equals(serviceClass)) {
-                return Arrays.asList(invoker);
-            }
+            return Arrays.asList(invoker);
         }
         return invokers;
     }

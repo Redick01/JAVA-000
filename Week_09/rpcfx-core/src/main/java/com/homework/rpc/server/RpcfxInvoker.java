@@ -2,7 +2,6 @@ package com.homework.rpc.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.homework.rpc.LocalRegisterCenter;
 import com.homework.rpc.api.RpcfxRequest;
 import com.homework.rpc.api.RpcfxResolver;
 import com.homework.rpc.api.RpcfxResponse;
@@ -28,15 +27,16 @@ public class RpcfxInvoker {
         RpcfxResponse response = new RpcfxResponse();
         String serviceClass = request.getServiceClass();
         try {
-            // 这里实现的是写一个本地的注册中心，从注册中心获取实现类，然后通过反射创建实现累的对象
-            Object service = Class.forName(LocalRegisterCenter.getInstance().getImplName(serviceClass)).newInstance();
+            // 通过反射创建实现类的对象
+            Object service = resolver.resolve(serviceClass);
+            // Object service = Class.forName("").newInstance();
             Method method = resolveMethodFromClass(service.getClass(), request.getMethod());
             Object result = method.invoke(service, request.getParams());
             // 两次json序列化能否合并成一个
             response.setResult(JSON.toJSONString(result, SerializerFeature.WriteClassName));
             response.setStatus(true);
             return response;
-        } catch ( IllegalAccessException | InvocationTargetException | ClassNotFoundException | InstantiationException e) {
+        } catch ( IllegalAccessException | InvocationTargetException /*| ClassNotFoundException | InstantiationException*/ e) {
             e.printStackTrace();
             response.setException(new RpcfxException(e));
             response.setStatus(false);
