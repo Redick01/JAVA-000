@@ -49,7 +49,7 @@ public class ZookeeperRegistry implements RegisterCenter {
     public void register(String serviceName, Integer port) {
         try {
             ServiceProviderDesc serviceProviderDesc = ServiceProviderDesc.builder()
-                    .host(InetAddress.getLocalHost().getHostAddress())
+                    .host("192.168.3.78")
                     .port(port)
                     .serviceClass(serviceName)
                     .build();

@@ -25,7 +25,7 @@ public class RpcfxServerApplication {
 
 	public static void main(String[] args) {
 		// 注册到zk
-		RegisterCenter registry = new ZookeeperRegistry("192.168.58.45:2181", "Rpcfx");
+		RegisterCenter registry = new ZookeeperRegistry("192.168.3.78:2181", "Rpcfx");
 		registry.register(UserService.class.getName(), 8080);
 		registry.register(OrderService.class.getName(), 8080);
 		System.out.println("System started.");
