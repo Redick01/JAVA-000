@@ -1,12 +1,13 @@
 ## 作业
 
-#### 作业1
-```
-rpcfx-core
-1.HttpClientUtil.java使用httpclient4实现http客户端，使用线程池异步处理。
-2.exception包自定义RpcfxException
-3.LocalRegisterCenter.java实现本地注册中心
-```
+#### 必做作业1，改造rpc框架
+##### rpcfx-core
+- 1.com.homework.rpc.util包HttpClientUtil.java使用httpclient4实现http客户端，使用线程池异步处理。
+- 2.封装RPC异常，com.homework.rpc.exception包自定义RpcfxException。
+- 3.com.homework.rpc.loadbalancer包，RibbonLoadBalancer.java实现简单的基于ribbon的负载均衡。
+- 4.com.homework.rpc.register包，ZookeeperRegister.java实现基于zk的注册中心。
+- 5.去掉provider中Bean的name，RpcfxInvoker实现ApplicationContentAware，从Spring Context中获取bean。
+- 6.Rpcfx，实现简单的ByteBuddy字节码增强，代替动态代理
 
 #### 作业2
 ```

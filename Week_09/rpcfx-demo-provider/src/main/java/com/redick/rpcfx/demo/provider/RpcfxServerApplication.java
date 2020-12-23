@@ -25,7 +25,7 @@ public class RpcfxServerApplication {
 
 	public static void main(String[] args) {
 		// 注册到zk
-		RegisterCenter registry = new ZookeeperRegistry("192.168.3.78:2181", "Rpcfx");
+		RegisterCenter registry = new ZookeeperRegistry("192.168.58.45:2181", "Rpcfx");
 		registry.register(UserService.class.getName(), 8080);
 		registry.register(OrderService.class.getName(), 8080);
 		System.out.println("System started.");
@@ -42,7 +42,7 @@ public class RpcfxServerApplication {
 
 	@Bean
 	public RpcfxInvoker createInvoker(@Autowired RpcfxResolver resolver){
-		return new RpcfxInvoker(resolver);
+		return new RpcfxInvoker();
 	}
 
 	@Bean
@@ -50,14 +50,12 @@ public class RpcfxServerApplication {
 		return new DemoResolver();
 	}
 
-	// 能否去掉name
-	//
-	@Bean(name = "io.redick.rpcfx.demo.api.UserService")
+	@Bean
 	public UserService createUserService(){
 		return new UserServiceImpl();
 	}
 
-	@Bean(name = "io.redick.rpcfx.demo.api.OrderService")
+	@Bean
 	public OrderService createOrderService(){
 		return new OrderServiceImpl();
 	}
