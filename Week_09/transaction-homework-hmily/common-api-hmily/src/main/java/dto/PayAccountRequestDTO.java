@@ -1,5 +1,6 @@
 package dto;
 
+import enums.ExchangeTypeEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -18,7 +19,12 @@ public class PayAccountRequestDTO implements Serializable {
     private String userId;
 
     /**
+     * 兑换类型
+     */
+    private ExchangeTypeEnum exchangeType;
+
+    /**
      * user actual pay price
      */
-    private BigDecimal payAmount;
+    private Integer exchangeAmount;
 }

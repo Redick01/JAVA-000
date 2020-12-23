@@ -9,10 +9,11 @@
 - 5.去掉provider中Bean的name，RpcfxInvoker实现ApplicationContentAware，从Spring Context中获取bean。
 - 6.Rpcfx，实现简单的ByteBuddy字节码增强，代替动态代理
 
-#### 作业2
-```
-dubbo+hmily作业在transaction-homework-hmily工程
-```
+#### 作业2 dubbo+hmily
+- 1.dubbo+hmily作业在transaction-homework-hmily工程
+- 2.作业刚开始理解错了，一个dubbo工程就可以搞定，一个项目连两个数据库
+- 3.作业中直接在sql中做了运算，实际项目应该在程序代码中运算
+- 4.程序中应该多些异常处理
 
 
 ## 学习笔记 
