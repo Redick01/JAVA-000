@@ -81,9 +81,14 @@ public class RedissionUtil {
      * @return
      */
     public long setCounter(String key, String namespace) {
-        RMap<String, Integer> rMap = redissonClient.getMapCache(namespace, IntegerCodec.INSTANCE);
-        rMap.putIfAbsent(key, 0);
-        return rMap.addAndGet(key, 1);
+        try {
+            RMap<String, Integer> rMap = redissonClient.getMapCache(namespace, IntegerCodec.INSTANCE);
+            rMap.putIfAbsent(key, 0);
+            return rMap.addAndGet(key, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     /**
@@ -93,13 +98,18 @@ public class RedissionUtil {
      * @return
      */
     public long delCounter(String key, String namespace) {
-        RMap<String, Integer> rMap = redissonClient.getMapCache(namespace, IntegerCodec.INSTANCE);
-        rMap.putIfAbsent(key, 0);
-        int value = rMap.get(key);
-        if (value <= 0) {
+        try {
+            RMap<String, Integer> rMap = redissonClient.getMapCache(namespace, IntegerCodec.INSTANCE);
+            rMap.putIfAbsent(key, 0);
+            int value = rMap.get(key);
+            if (value <= 0) {
+                return 0;
+            } else {
+                return rMap.addAndGet(key, -1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return 0;
-        } else {
-            return rMap.addAndGet(key, -1);
         }
     }
 }

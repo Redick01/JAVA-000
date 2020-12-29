@@ -111,6 +111,22 @@ public class JedisUtil {
         return result;
     }
 
+    public long delCounter(String key) {
+        long result = 0;
+        try {
+            Jedis jedis = jedisPool.getResource();
+            result = Long.parseLong(jedis.get(key));
+            if (result <= 0) {
+                return 0;
+            } else {
+                result = jedis.decr(key);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     /**
      * 生成分布式锁key 所用的唯一值
      * @param keyValue 分布式锁key 所用的唯一值
