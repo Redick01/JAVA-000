@@ -1,5 +1,11 @@
 ## 作业
 
+### 必做作业1，配置redis的主从复制，sentinel高可用，Cluster集群。
+
+#### 通过docker搭建redis主从
+```
+作业地址：https://redick01.github.io/redick.github.io/#/blog/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis_1
+```
 
 ## 学习笔记
 
@@ -25,3 +31,17 @@ Lettuce详解：
 
 Redis设计与实现：http://redisbook.com/
 ```
+
+1、redis模拟表，最好是以模拟行的方式
+比如：
+A-USD
+A-CNY
+B-USD
+B-CNY
+一个是4个key，另一中方式是json，写到一个key，，，哪个好？
+大多数情况用 4个key，因为：
+json相当于模拟了一个表
+1、序列化
+2、非结构化的数据，2个用户x2 account，20万x20万？
+3、数据过期，json无法针对具体数据处理
+
