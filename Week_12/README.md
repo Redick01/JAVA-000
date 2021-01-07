@@ -10,3 +10,10 @@
 ```
 作业地址：https://redick01.github.io/redick.github.io/#/blog/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis_1?id=redis-sentinel%ef%bc%88%e5%93%a8%e5%85%b5%ef%bc%89%e9%85%8d%e7%bd%ae
 ```
+
+#### 实现基于Lettuce和Redisson的Sentinel配置
+```
+Redisson作业地址：
+https://github.com/Redick01/JAVA-000/blob/main/Week_12/redis-homework-2/src/main/java/cache/sentinel/SentinelRedission.java
+Lettuce作业地址：https://github.com/Redick01/JAVA-000/blob/main/Week_12/redis-homework-2/src/main/java/cache/sentinel/SentinelLettuce.java
+```
