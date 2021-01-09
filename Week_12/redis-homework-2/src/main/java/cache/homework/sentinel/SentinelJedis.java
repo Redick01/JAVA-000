@@ -1,4 +1,4 @@
-package cache.sentinel;
+package cache.homework.sentinel;
 
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;

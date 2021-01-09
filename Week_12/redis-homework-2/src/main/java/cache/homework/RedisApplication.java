@@ -1,7 +1,8 @@
-package cache;
+package cache.homework;
 
+import cache.homework.cluster.ClusterJedis;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
 
 @SpringBootApplication(scanBasePackages = "cache")
 public class RedisApplication {
@@ -9,10 +10,10 @@ public class RedisApplication {
 	public static void main(String[] args) {
 
 		// C1.最简单demo
-		Jedis jedis = new Jedis("localhost", 6379);
-		System.out.println(jedis.info());
-		jedis.set("uptime", new Long(System.currentTimeMillis()).toString());
-		System.out.println(jedis.get("uptime"));
+//		Jedis jedis = new Jedis("localhost", 6379);
+//		System.out.println(jedis.info());
+//		jedis.set("uptime", new Long(System.currentTimeMillis()).toString());
+//		System.out.println(jedis.get("uptime"));
 
 		// C2.基于sentinel和连接池的demo
 //		Jedis sjedis = SentinelJedis.getJedis();
@@ -50,12 +51,12 @@ public class RedisApplication {
 		//  3) 分配槽位，确认分配成功
 		//  4) 测试简单的get/set是否成功
 		// 然后运行如下代码
-// 		JedisCluster cluster = ClusterJedis.getJedisCluster();
-//		for (int i = 0; i < 100; i++) {
-//			cluster.set("cluster:" + i, "data:" + i);
-//		}
-//		System.out.println(cluster.get("cluster:92"));
-//		ClusterJedis.close();
+ 		JedisCluster cluster = ClusterJedis.getJedisCluster();
+		for (int i = 0; i < 100; i++) {
+			cluster.set("cluster:" + i, "data:" + i);
+		}
+		System.out.println(cluster.get("cluster:92"));
+		ClusterJedis.close();
 
 		//SpringApplication.run(RedisApplication.class, args);
 

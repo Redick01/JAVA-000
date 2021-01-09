@@ -1,4 +1,4 @@
-package cache.entity;
+package cache.homework.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
