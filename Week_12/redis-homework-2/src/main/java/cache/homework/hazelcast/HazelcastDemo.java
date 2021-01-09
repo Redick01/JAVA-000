@@ -1,4 +1,4 @@
-package cache.hazelcast;
+package cache.homework.hazelcast;
 
 public class HazelcastDemo {
 

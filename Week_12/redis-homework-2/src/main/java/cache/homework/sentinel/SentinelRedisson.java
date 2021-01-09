@@ -1,4 +1,4 @@
-package cache.sentinel;
+package cache.homework.sentinel;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

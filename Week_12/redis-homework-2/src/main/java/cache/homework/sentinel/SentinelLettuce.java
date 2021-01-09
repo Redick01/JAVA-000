@@ -1,4 +1,4 @@
-package cache.sentinel;
+package cache.homework.sentinel;
 
 import io.lettuce.core.ReadFrom;
 import io.lettuce.core.RedisClient;

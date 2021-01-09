@@ -1,6 +1,6 @@
-package cache.controller;
+package cache.homework.controller;
 
-import cache.entity.User;
+import cache.homework.entity.User;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,4 +1,4 @@
-package cache.cluster;
+package cache.homework.cluster;
 
 import lombok.SneakyThrows;
 import redis.clients.jedis.HostAndPort;
@@ -17,10 +17,12 @@ public final class ClusterJedis {
                 // 添加集群的服务节点Set集合
         Set<HostAndPort> hostAndPortsSet = new HashSet<HostAndPort>();
         // 添加节点
-        hostAndPortsSet.add(new HostAndPort("172.20.10.2", 6379));
-        hostAndPortsSet.add(new HostAndPort("172.20.10.2", 6380));
-        hostAndPortsSet.add(new HostAndPort("172.20.10.2", 6381));
-
+        hostAndPortsSet.add(new HostAndPort("192.168.3.78", 6391));
+        hostAndPortsSet.add(new HostAndPort("192.168.3.78", 6392));
+        hostAndPortsSet.add(new HostAndPort("192.168.3.78", 6393));
+        hostAndPortsSet.add(new HostAndPort("192.168.3.78", 6394));
+        hostAndPortsSet.add(new HostAndPort("192.168.3.78", 6395));
+        hostAndPortsSet.add(new HostAndPort("192.168.3.78", 6396));
         // Jedis连接池配置
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         // 最大空闲连接数, 默认8个

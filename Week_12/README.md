@@ -20,5 +20,7 @@
 ```
 Redisson作业地址：
 https://github.com/Redick01/JAVA-000/blob/main/Week_12/redis-homework-2/src/main/java/cache/sentinel/SentinelRedission.java
-Lettuce作业地址：https://github.com/Redick01/JAVA-000/blob/main/Week_12/redis-homework-2/src/main/java/cache/sentinel/SentinelLettuce.java
+
+Lettuce作业地址：
+https://github.com/Redick01/JAVA-000/blob/main/Week_12/redis-homework-2/src/main/java/cache/sentinel/SentinelLettuce.java
 ```
