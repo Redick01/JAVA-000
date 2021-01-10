@@ -18,8 +18,8 @@
 
     <modules>
         <module>common-api-hmily</module>
-        <module>dollar-account-service-hmily</module>
-        <module>renminbi-account-service-hmily</module>
+        <module>a-account-service-hmily</module>
+        <module>b-account-service-hmily</module>
     </modules>
 
     <properties>
