@@ -1,6 +1,6 @@
-package io.redick.rpcfx.demo.api;
+package io.redick.kmq.rpcfx.demo.api;
 
-import io.redick.rpcfx.demo.dto.Order;
+import io.redick.kmq.rpcfx.demo.dto.Order;
 
 /**
  * @author liupenghui

@@ -1,4 +1,4 @@
-package io.redick.rpcfx.demo.dto;
+package io.redick.kmq.rpcfx.demo.dto;
 
 import lombok.Data;
 

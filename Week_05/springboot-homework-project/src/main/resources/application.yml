@@ -1,2 +1,9 @@
 server:
-  port: 8080
+  port: 8086
+soul:
+  http:
+    adminUrl: http://localhost:9095
+    port: 8086
+    contextPath: /soul
+    appName: http
+    full: true

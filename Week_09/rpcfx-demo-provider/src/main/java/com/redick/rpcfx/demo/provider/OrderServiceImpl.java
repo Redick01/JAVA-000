@@ -2,8 +2,8 @@ package com.redick.rpcfx.demo.provider;
 
 
 import com.homework.rpc.annotation.Service;
-import io.redick.rpcfx.demo.api.OrderService;
-import io.redick.rpcfx.demo.dto.Order;
+import io.redick.kmq.rpcfx.demo.api.OrderService;
+import io.redick.kmq.rpcfx.demo.dto.Order;
 
 @Service
 public class OrderServiceImpl implements OrderService {

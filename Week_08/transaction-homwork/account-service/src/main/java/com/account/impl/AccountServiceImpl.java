@@ -5,6 +5,7 @@ import com.account.mapper.AccountMapper;
 import dto.PayAccountRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hmily.annotation.HmilyTCC;
+import org.dromara.soul.client.dubbo.common.annotation.SoulDubboClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @HmilyTCC(confirmMethod = "confirm", cancelMethod = "cancel")
+    @SoulDubboClient(path = "/pay", desc = "支付")
     public boolean pay(PayAccountRequestDTO requestDTO) {
         return accountMapper.update(requestDTO.getUserId(), requestDTO.getPayAmount()) > 0;
     }

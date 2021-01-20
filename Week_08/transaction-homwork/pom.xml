@@ -29,6 +29,7 @@
         <zookeeper.version>3.4.5</zookeeper.version>
         <hmily.version>2.1.1</hmily.version>
         <springfox.version>2.6.1</springfox.version>
+        <soul-version>2.2.1</soul-version>
     </properties>
 
     <dependencies>
@@ -91,6 +92,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara</groupId>
+            <artifactId>soul-spring-boot-starter-client-alibaba-dubbo</artifactId>
+            <version>${soul-version}</version>
         </dependency>
         <!--hmily-->
         <dependency>

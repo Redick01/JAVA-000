@@ -1,13 +1,13 @@
-package io.redick.rpcfx.demo.consumer;
+package io.redick.kmq.rpcfx.demo.consumer;
 
 import com.homework.rpc.router.DefaultRouter;
 import com.homework.rpc.loadbalancer.RibbonLoadBalancer;
 import com.homework.rpc.client.Rpcfx;
 import com.homework.rpc.filter.TestFilter;
-import io.redick.rpcfx.demo.api.OrderService;
-import io.redick.rpcfx.demo.api.UserService;
-import io.redick.rpcfx.demo.dto.Order;
-import io.redick.rpcfx.demo.dto.User;
+import io.redick.kmq.rpcfx.demo.api.OrderService;
+import io.redick.kmq.rpcfx.demo.api.UserService;
+import io.redick.kmq.rpcfx.demo.dto.Order;
+import io.redick.kmq.rpcfx.demo.dto.User;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
