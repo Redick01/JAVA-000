@@ -6,7 +6,7 @@ package cache.homework;
  */
 public class Test {
 
-    private int result;
+    private volatile int result;
 
     public int getResult() {
         return result;
@@ -17,17 +17,18 @@ public class Test {
 
     public static void main(String[] args){
         Test threadSafeCache =new Test();
-        for(int i =0; i <8; i++) {
+        for(int i =0; i < 8; i++) {
             new Thread(() -> {
-                while(threadSafeCache.getResult() <100) {
+                while (threadSafeCache.getResult() < 100) {
 
                 }
                 System.out.println("我执行了");
 
             }).start();
-        }try{
+        }
+        try {
             Thread.sleep(1000);
-        }catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         threadSafeCache.setResult(200);
