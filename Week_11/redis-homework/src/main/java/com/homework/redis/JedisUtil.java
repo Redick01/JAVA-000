@@ -5,6 +5,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author liupenghui
@@ -48,7 +49,7 @@ public class JedisUtil {
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxIdle(10);
         config.setMaxTotal(30);
-        JedisPool pool = new JedisPool(config, host, port, 30000);
+        jedisPool = new JedisPool(config, host, port, 30000, "Ruyixing2017");
     }
 
     /**
@@ -127,6 +128,13 @@ public class JedisUtil {
         return result;
     }
 
+    public void del(String key) {
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(2);
+        Set<String> sets = jedis.keys(key);
+        sets.forEach(e -> jedis.del(e));
+    }
+
     /**
      * 生成分布式锁key 所用的唯一值
      * @param keyValue 分布式锁key 所用的唯一值
@@ -134,5 +142,12 @@ public class JedisUtil {
      */
     private String getLockKey(String keyValue) {
         return BUSINESS + ":" + keyValue + ":" + FIELD_NAME;
+    }
+
+
+    public static void main(String[] args) {
+        JedisUtil jedisUtil = new JedisUtil("r-2ze2bde2c40f39b4.redis.rds.aliyuncs.com", 6379);
+        jedisUtil.del("MATCH*");
+        System.exit(0);
     }
 }

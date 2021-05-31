@@ -10,10 +10,10 @@ import java.util.concurrent.ScheduledExecutorService;
  * @author liupenghui
  * @date 2021/1/30 11:00 下午
  */
-@Configuration
+//@Configuration
 public class JobConfiguration {
 
-    @Bean
+    //@Bean
     public ScheduledExecutorService getJob() {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
         return executorService;

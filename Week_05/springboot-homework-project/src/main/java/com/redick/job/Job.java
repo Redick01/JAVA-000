@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
  * @author liupenghui
  * @date 2021/1/30 11:03 下午
  */
-@Component
+//@Component
 public class Job {
 
-    @Autowired
+    //@Autowired
     private ScheduledExecutorService scheduledExecutorService;
 
-    @PostConstruct
+    //@PostConstruct
     public void task() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             System.out.println("====>" + SoulTestController.integer.intValue());
